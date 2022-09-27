@@ -1,6 +1,6 @@
-frida==14.2.13
-frida-tools==9.2.2
+frida==15.2.2
+frida-tools==11.0.0
 -e git+https://github.com/honeynet/droidbot.git#egg=droidbot
-mitmproxy==5.2
-objection==1.9.6
-psutil==5.7.2
+mitmproxy==8.1.1
+objection==1.11.0
+psutil==5.9.2

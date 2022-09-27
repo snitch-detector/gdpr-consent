@@ -13,6 +13,9 @@ import time
 import csv
 from pathlib import Path
 
+global device_factor
+device_factor = 4
+
 def install_app(apk, file_path, device_serial, adb_object):	
 	print(f'Installing {apk}')	
 	
@@ -61,10 +64,12 @@ def is_mitm_running(listen_port):
 
 
 def start_monitor(out_dir_path, out_file_name, listen_port, device_serial, package_name):
-	cmd_mitm = f'mitmdump -w {out_dir_path}/{out_file_name} --set block_global=false --set listen_port={listen_port}'
+	cmd_mitm = f'mitmdump -w {out_dir_path}/{out_file_name.replace(" ", "")} --set block_global=false --set listen_port={listen_port}'
+	print(cmd_mitm)
 	pro_mitm = subprocess.Popen(cmd_mitm, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid) 													
 	cmd_objection = f'objection -S {device_serial} -g {package_name} explore --startup-command "android sslpinning disable"'
-	pro_objection = subprocess.Popen(cmd_objection, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)			
+	print(cmd_objection)
+	pro_objection = subprocess.Popen(cmd_objection, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)	
 
 	return pro_mitm, pro_objection
 
@@ -114,21 +119,21 @@ def analyze_app(package_name, file_path, device_serial, listen_port, out_dir_pat
 	is_installed = install_app(package_name, file_path, device_serial, adb_object)
 	if not is_installed:							
 		return		
-	time.sleep(8)
+	time.sleep(8 * device_factor)
 
 	out_file_name = os.path.basename(file_path)	
 	Path(out_dir_path).mkdir(parents=True, exist_ok=True)
 
 	#first time opening the app
 	pro_mitm, pro_objection = start_monitor(out_dir_path, out_file_name + '_1', listen_port, device_serial, package_name)		
-	time.sleep(15)
+	time.sleep(15 * device_factor)
 	capture_screenshot(adb_object, out_dir_path)			
 	tear_down(pro_mitm, pro_objection, listen_port)
 	adb_object.run_cmd(f'shell am force-stop {package_name}')	
 
 	#second time opening the app
 	pro_mitm, pro_objection = start_monitor(out_dir_path, out_file_name + '_2', listen_port, device_serial, package_name)		
-	time.sleep(15)
+	time.sleep(15 * device_factor)
 	tear_down(pro_mitm, pro_objection, listen_port)	
 
 	#uninstall the app

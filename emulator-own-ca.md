@@ -1,8 +1,8 @@
-- use android sdk without Google Play Services
+- use android sdk without Google Play Services!
 
 - download pem from http://mitm.it (accessible from client connected to proxy)
-- prepare certificate http://wiki.cacert.org/FAQ/ImportRootCert#Android_Phones_.26_Tablets
-- `~/Android/Sdk/tools  ./emulator @Pixel -writable-system`
+- prepare certificate http://wiki.cacert.org/FAQ/ImportRootCert#Android_Phones_.26_Tablets, https://stackoverflow.com/questions/13981011/cacerts-bks-does-not-exist/18390177#18390177
+- `cd ~/Android/Sdk/tools && ./emulator @Pixel -writable-system`
 ```
 adb root
 adb remount
