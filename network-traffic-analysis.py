@@ -14,7 +14,7 @@ import csv
 from pathlib import Path
 
 global device_factor
-device_factor = 4
+device_factor = 1
 
 def install_app(apk, file_path, device_serial, adb_object):	
 	print(f'Installing {apk}')	
@@ -29,7 +29,7 @@ def install_app(apk, file_path, device_serial, adb_object):
 		count += 1
 		time.sleep(2)
 
-		if count >= 50:		
+		if count >= 20:		
 			with open(f'log_failed_{device_serial}.csv', 'a') as file:
 				file.write(f'{apk}\n')
 			return False
@@ -174,11 +174,12 @@ def get_apk_file_dict(csv_file):
 	return apk_dict
 
 def get_path(apk, home_dir):
-	sha1 = hashlib.sha1()
-	sha1.update(apk.encode('utf-8'))
-	sha1String = sha1.hexdigest()
+	# sha1 = hashlib.sha1()
+	# sha1.update(apk.encode('utf-8'))
+	# sha1String = sha1.hexdigest()
 
-	file_path = os.path.join(home_dir, sha1String[0], sha1String[1], sha1String[2], sha1String[3], apk)	
+	# file_path = os.path.join(home_dir, sha1String[0], sha1String[1], sha1String[2], sha1String[3], apk)	
+	file_path = os.path.join(home_dir, apk)	
 
 	return file_path
 
